@@ -64,6 +64,19 @@ public class MainActivity extends AppCompatActivity {
 //                InputStreamReader inputStreamReader = new InputStreamReader(inputStream); // Creating new inputStreamReader that is used to create a new bufferedReader
 //                BufferedReader reader = new BufferedReader(inputStreamReader); // Bufferes the input stream reader and the buffered reader is actually used to read the XML
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream())); // Creates a buffer to read the XML input
+
+                int charsRead; // BufferedReader reads in characters not string, so we need to convert them to string.
+                char[] inputBuffer = new char[500];
+                while (true){ // Keeps running until the end of the input stream has been reached
+                    charsRead = reader.read(inputBuffer);
+                    if (charsRead < 0) { // if buffered reader's read method returns a value less than 0, this signals the end of the input stream
+                        break; // break out of the loop
+                    }
+                    if (charsRead > 0) { // if buffered reader's read method returns a value greater than 0
+                     xmlResult.append(String.copyValueOf(inputBuffer, 0, charsRead)); // Add characters read to string result
+                    }
+                }
+                reader.close();
             } catch (MalformedURLException e) { // Used to handle any errors in line 58. This will be caught when there is a problem with the URL.
                 Log.e(TAG, "downloadXML: Invalid URL " + e.getMessage()); // error.getMessages gives us more info about the error.
             } catch (IOException e) { // handles any errors involving reading/writing. This is used to handle any errors in lines 60, 61, 63
