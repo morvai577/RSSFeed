@@ -7,13 +7,10 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import static java.net.Proxy.Type.HTTP;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -76,12 +73,17 @@ public class MainActivity extends AppCompatActivity {
                      xmlResult.append(String.copyValueOf(inputBuffer, 0, charsRead)); // Add characters read to string result
                     }
                 }
-                reader.close();
+                reader.close(); // Close input stream reader
+
+                // Convert xmlResult to string
+                return xmlResult.toString(); // Converts the String Builder xmlResult to a string
             } catch (MalformedURLException e) { // Used to handle any errors in line 58. This will be caught when there is a problem with the URL.
                 Log.e(TAG, "downloadXML: Invalid URL " + e.getMessage()); // error.getMessages gives us more info about the error.
             } catch (IOException e) { // handles any errors involving reading/writing. This is used to handle any errors in lines 60, 61, 63
                 Log.e(TAG, "downloadXML: IO Exception reading data: " + e.getMessage());
             }
+
+            return null; // If any errors in our catch blocks, we want to return null
         }
 
     }
