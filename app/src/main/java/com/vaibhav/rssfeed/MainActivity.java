@@ -1,9 +1,18 @@
 package com.vaibhav.rssfeed;
 
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import static java.net.Proxy.Type.HTTP;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,9 +42,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(String... strings) { // This method is used to tell what code you want to run in the background
+        protected String doInBackground(String... strings) { // This method is used to tell what code you want to run in the background thread
             Log.d(TAG, "doInBackground: starts with: " + strings[0]);
-            return "doInBackground completed.";
+            String rssFeed = downloadXML(strings[0]); // Call to downloadXML within doInBackground means this method will also run in the backgriund thread
+            if(rssFeed == null){
+                Log.e(TAG, "doInBackground: Error downloading");
+            }
+            return rssFeed;
+        }
+
+        private String downloadXML(String urlPath){
+            StringBuilder xmlResult = new StringBuilder(); // Used to append data that we read into a single string
+
+            try { // Always use try block when accessing external data as many things could go wrong.
+                URL url = new URL(urlPath); // Used to create URL from parsed string
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection(); // Used to open the connection
+                int response = connection.getResponseCode();
+                Log.d(TAG, "downloadXML: The response code was " + response);
+                InputStream inputStream = connection.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader reader = new BufferedReader(inputStreamReader);
+            } catch (MalformedURLException e) { // Used to handle any errors in line 58
+                Log.e(TAG, "downloadXML: Invalid URL " + e.getMessage());
+            }
         }
 
     }
