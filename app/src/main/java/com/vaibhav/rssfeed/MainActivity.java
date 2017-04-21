@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -59,11 +60,14 @@ public class MainActivity extends AppCompatActivity {
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection(); // Used to open the connection
                 int response = connection.getResponseCode();
                 Log.d(TAG, "downloadXML: The response code was " + response);
-                InputStream inputStream = connection.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader reader = new BufferedReader(inputStreamReader);
-            } catch (MalformedURLException e) { // Used to handle any errors in line 58
-                Log.e(TAG, "downloadXML: Invalid URL " + e.getMessage());
+//                InputStream inputStream = connection.getInputStream(); // Creating new inputStream
+//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream); // Creating new inputStreamReader that is used to create a new bufferedReader
+//                BufferedReader reader = new BufferedReader(inputStreamReader); // Bufferes the input stream reader and the buffered reader is actually used to read the XML
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream())); // Creates a buffer to read the XML input
+            } catch (MalformedURLException e) { // Used to handle any errors in line 58. This will be caught when there is a problem with the URL.
+                Log.e(TAG, "downloadXML: Invalid URL " + e.getMessage()); // error.getMessages gives us more info about the error.
+            } catch (IOException e) { // handles any errors involving reading/writing. This is used to handle any errors in lines 60, 61, 63
+                Log.e(TAG, "downloadXML: IO Exception reading data: " + e.getMessage());
             }
         }
 
