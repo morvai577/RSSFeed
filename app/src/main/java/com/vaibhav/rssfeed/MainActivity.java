@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate: starting Async task");
         DownloadData downloadData = new DownloadData();
-        downloadData.execute("URL goes here");
+        downloadData.execute("http://rss.nzherald.co.nz/rss/xml/nzhrsscid_001503711.xml");
         Log.d(TAG, "onCreate: done");
     }
 
@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "downloadXML: Invalid URL " + e.getMessage()); // error.getMessages gives us more info about the error.
             } catch (IOException e) { // handles any errors involving reading/writing. This is used to handle any errors in lines 60, 61, 63
                 Log.e(TAG, "downloadXML: IO Exception reading data: " + e.getMessage());
+            } catch (SecurityException e) {
+                Log.e(TAG, "downloadXML: Security Exception. Needs permission? " + e.getMessage());
             }
 
             return null; // If any errors in our catch blocks, we want to return null
