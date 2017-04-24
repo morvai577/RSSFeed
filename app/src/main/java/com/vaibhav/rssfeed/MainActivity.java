@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate: starting Async task");
         DownloadData downloadData = new DownloadData();
-        downloadData.execute("http://rss.nzherald.co.nz/rss/xml/nzhrsscid_001503711.xml");
+        downloadData.execute("http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=10/xml");
         Log.d(TAG, "onCreate: done");
     }
 
@@ -36,7 +36,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) { // This is called to get back a alert when the job is done
             super.onPostExecute(s);
-            Log.d(TAG, "onPostExecute: parameter is: " + s);
+            Log.d(TAG, "onPostExecute: parameter is " + s);
+            // Call XML parser
+            ParseApplications parseApplications = new ParseApplications();
+            parseApplications.parse(s);
         }
 
         @Override
